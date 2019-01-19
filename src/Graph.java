@@ -20,4 +20,8 @@ public interface Graph {
      * breadth-first search, BFS
      */
     void bfs(String startLabel);
+
+    boolean find(String label);
+
+    void dfsShort(String startLabel, String lastLabel);
 }

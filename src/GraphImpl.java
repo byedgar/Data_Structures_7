@@ -136,6 +136,7 @@ public class GraphImpl implements Graph {
 
     /**
      * Method for readth-first search, BFS
+     *
      * @param startLabel -  label name
      */
     @Override
@@ -169,6 +170,78 @@ public class GraphImpl implements Graph {
 
         resetVertexState();
     }
+
+
+    @Override
+    public void dfsShort(String startLabel, String lastLabel) {
+        int minStep = 1000000;
+        int stepCount = 0;
+
+        int startIndex = indexOf(startLabel);
+        int lastIndex = indexOf(lastLabel);
+        System.out.println("Short Path from " + startLabel + " to " + lastLabel);
+
+        if (startIndex == -1) {
+            throw new IllegalArgumentException("Unknown start vertex: " + startLabel);
+        }
+        if (lastIndex == -1) {
+            throw new IllegalArgumentException("Unknown last vertex: " + startLabel);
+        }
+
+        if (startIndex == lastIndex) {
+            stepCount++;
+        }
+        System.out.println("-------------");
+        Queue<Vertex> queue = new LinkedList<>();
+        Vertex vertex = vertexes.get(startIndex);
+        visitVertex(vertex);
+
+        // queue.add(vertex);
+        queue.add(vertex);
+        while (!queue.isEmpty()) {
+
+            if (startLabel.equals(lastLabel)) {
+                stepCount++;
+                break;
+            } else {
+                vertex = getAdjUnvisitedVertex(queue.peek());
+
+                if (vertex != null) {
+                    visitVertex(vertex);
+                    stepCount++;
+                    queue.add(vertex);
+                    if (vertex.getLabel().equals(lastLabel)) {
+                        if (stepCount < minStep)
+                            minStep = stepCount;
+                    }
+                } else {
+
+                    queue.remove();
+                    stepCount--;
+                }
+            }
+
+
+        }
+
+        System.out.println("-------------");
+
+        resetVertexState();
+        System.out.println("Min count " + minStep);
+    }
+
+    @Override
+    public boolean find(String label) {
+        if (vertexes.size() == 0)
+            return false;
+
+        for (Vertex vertex : vertexes) {
+            if (vertex.getLabel().equals(label))
+                return true;
+        }
+        return false;
+    }
+
 
     private void resetVertexState() {
         for (Vertex vertex : vertexes) {
